@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
-import { Phone } from 'lucide-react-native';
+import { Phone, TextSize, Sun, Moon } from 'lucide-react-native';
 import { Link } from 'expo-router';
 
 export default function Header() {
   const [scrollY] = useState(new Animated.Value(0));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [textSizeIndex, setTextSizeIndex] = useState(1); // 0: small, 1: normal, 2: large
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const headerBackground = scrollY.interpolate({
     inputRange: [0, 50],
@@ -13,17 +15,62 @@ export default function Header() {
     extrapolate: 'clamp',
   });
 
+  const textSizes = {
+    small: 0.9,
+    normal: 1,
+    large: 1.2,
+  };
+
+  const toggleTextSize = () => {
+    setTextSizeIndex((prev) => (prev + 1) % 3);
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <Animated.View style={[styles.header, { backgroundColor: headerBackground }]}>
+    <Animated.View style={[
+      styles.header, 
+      { backgroundColor: headerBackground },
+      isDarkMode && styles.darkHeader
+    ]}>
       <View style={styles.container}>
         <View style={styles.logoContainer}>
-          <Text style={styles.logoText}>SGROSHI</Text>
+          <Text style={[
+            styles.logoText,
+            isDarkMode && styles.darkText,
+            { fontSize: 24 * textSizes[Object.keys(textSizes)[textSizeIndex]] }
+          ]}>SGROSHI</Text>
         </View>
 
         <View style={styles.rightContainer}>
+          <View style={styles.accessibilityControls}>
+            <TouchableOpacity 
+              style={[styles.accessibilityButton, isDarkMode && styles.darkAccessibilityButton]} 
+              onPress={toggleTextSize}
+            >
+              <TextSize size={20} color={isDarkMode ? '#FFFFFF' : '#0C2055'} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={[styles.accessibilityButton, isDarkMode && styles.darkAccessibilityButton]} 
+              onPress={toggleDarkMode}
+            >
+              {isDarkMode ? (
+                <Sun size={20} color="#FFFFFF" />
+              ) : (
+                <Moon size={20} color="#0C2055" />
+              )}
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity style={styles.phoneButton}>
             <Phone size={20} color="#FFFFFF" />
-            <Text style={styles.phoneText}>0 800 505 111</Text>
+            <Text style={[
+              styles.phoneText,
+              { fontSize: 14 * textSizes[Object.keys(textSizes)[textSizeIndex]] }
+            ]}>0 800 505 111</Text>
           </TouchableOpacity>
 
           <TouchableOpacity 
@@ -38,25 +85,41 @@ export default function Header() {
       </View>
 
       {isMenuOpen && (
-        <View style={styles.mobileMenu}>
+        <View style={[styles.mobileMenu, isDarkMode && styles.darkMobileMenu]}>
           <Link href="/" asChild>
             <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>Головна</Text>
+              <Text style={[
+                styles.menuItemText,
+                isDarkMode && styles.darkText,
+                { fontSize: 16 * textSizes[Object.keys(textSizes)[textSizeIndex]] }
+              ]}>Головна</Text>
             </TouchableOpacity>
           </Link>
           <Link href="/about" asChild>
             <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>Про нас</Text>
+              <Text style={[
+                styles.menuItemText,
+                isDarkMode && styles.darkText,
+                { fontSize: 16 * textSizes[Object.keys(textSizes)[textSizeIndex]] }
+              ]}>Про нас</Text>
             </TouchableOpacity>
           </Link>
           <Link href="/conditions" asChild>
             <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>Умови</Text>
+              <Text style={[
+                styles.menuItemText,
+                isDarkMode && styles.darkText,
+                { fontSize: 16 * textSizes[Object.keys(textSizes)[textSizeIndex]] }
+              ]}>Умови</Text>
             </TouchableOpacity>
           </Link>
           <Link href="/contact" asChild>
             <TouchableOpacity style={styles.menuItem}>
-              <Text style={styles.menuItemText}>Контакти</Text>
+              <Text style={[
+                styles.menuItemText,
+                isDarkMode && styles.darkText,
+                { fontSize: 16 * textSizes[Object.keys(textSizes)[textSizeIndex]] }
+              ]}>Контакти</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -75,6 +138,9 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 40 : 30,
     paddingBottom: 10,
   },
+  darkHeader: {
+    backgroundColor: '#1a1a1a',
+  },
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -91,9 +157,28 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     letterSpacing: 1.2,
   },
+  darkText: {
+    color: '#FFFFFF',
+  },
   rightContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 16,
+  },
+  accessibilityControls: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  accessibilityButton: {
+    backgroundColor: '#FFFFFF',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  darkAccessibilityButton: {
+    backgroundColor: '#333333',
   },
   phoneButton: {
     flexDirection: 'row',
@@ -131,6 +216,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     backgroundColor: 'rgba(12, 32, 85, 0.98)',
+  },
+  darkMobileMenu: {
+    backgroundColor: 'rgba(26, 26, 26, 0.98)',
   },
   menuItem: {
     paddingVertical: 12,

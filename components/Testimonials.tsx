@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity, Image } from 'react-native';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
@@ -9,23 +9,29 @@ const testimonials = [
   {
     id: 1,
     name: 'Ольга Петренко',
+    age: '62 роки',
     location: 'Київ',
     rating: 5,
-    text: 'Дуже задоволена сервісом. Швидке оформлення, гроші на карту прийшли через 20 хвилин. Все чітко і без зайвих питань.',
+    text: 'Дуже зручний сервіс для людей мого віку. Великі кнопки, зрозумілі пояснення. Менеджер все детально пояснив по телефону. Гроші отримала швидко, без зайвої метушні.',
+    image: 'https://images.pexels.com/photos/2050994/pexels-photo-2050994.jpeg',
   },
   {
     id: 2,
     name: 'Віктор Коваленко',
+    age: '58 років',
     location: 'Львів',
     rating: 5,
-    text: 'Вже другий раз користуюсь послугами компанії. Взяв кредит на розвиток бізнесу, умови вигідні, все прозоро.',
+    text: 'Вперше брав кредит онлайн, хвилювався. Але все виявилося дуже просто. Особливо сподобалося, що можна збільшити розмір тексту - так набагато зручніше читати умови.',
+    image: 'https://images.pexels.com/photos/1139743/pexels-photo-1139743.jpeg',
   },
   {
     id: 3,
     name: 'Марія Шевченко',
+    age: '65 років',
     location: 'Одеса',
     rating: 4,
-    text: 'Брала кредит на ремонт квартири. Процес оформлення дуже зручний, менеджери завжди на зв\'язку і допомагають.',
+    text: 'Дуже вдячна за уважне ставлення до клієнтів старшого віку. Онук допоміг оформити перший кредит, а другий я вже сама змогла оформити - все дуже зрозуміло пояснено.',
+    image: 'https://images.pexels.com/photos/2050999/pexels-photo-2050999.jpeg',
   },
 ];
 
@@ -51,7 +57,7 @@ export default function Testimonials() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Відгуки клієнтів</Text>
+      <Text style={styles.title}>Відгуки наших клієнтів</Text>
       
       <View style={styles.carouselContainer}>
         <ScrollView
@@ -64,6 +70,18 @@ export default function Testimonials() {
         >
           {testimonials.map((testimonial) => (
             <View key={testimonial.id} style={styles.testimonialCard}>
+              <View style={styles.testimonialHeader}>
+                <Image
+                  source={{ uri: testimonial.image }}
+                  style={styles.testimonialImage}
+                />
+                <View style={styles.testimonialInfo}>
+                  <Text style={styles.testimonialName}>{testimonial.name}</Text>
+                  <Text style={styles.testimonialAge}>{testimonial.age}</Text>
+                  <Text style={styles.testimonialLocation}>{testimonial.location}</Text>
+                </View>
+              </View>
+              
               <View style={styles.ratingContainer}>
                 {[...Array(5)].map((_, i) => (
                   <Star
@@ -74,11 +92,8 @@ export default function Testimonials() {
                   />
                 ))}
               </View>
+              
               <Text style={styles.testimonialText}>"{testimonial.text}"</Text>
-              <View style={styles.testimonialFooter}>
-                <Text style={styles.testimonialName}>{testimonial.name}</Text>
-                <Text style={styles.testimonialLocation}>{testimonial.location}</Text>
-              </View>
             </View>
           ))}
         </ScrollView>
@@ -158,6 +173,37 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
+  testimonialHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  testimonialImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginRight: 16,
+  },
+  testimonialInfo: {
+    flex: 1,
+  },
+  testimonialName: {
+    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 18,
+    color: '#0C2055',
+    marginBottom: 4,
+  },
+  testimonialAge: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 4,
+  },
+  testimonialLocation: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 14,
+    color: '#6B7280',
+  },
   ratingContainer: {
     flexDirection: 'row',
     marginBottom: 16,
@@ -167,24 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#374151',
     lineHeight: 24,
-    marginBottom: 20,
     fontStyle: 'italic',
-  },
-  testimonialFooter: {
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.06)',
-    paddingTop: 16,
-  },
-  testimonialName: {
-    fontFamily: 'Montserrat-SemiBold',
-    fontSize: 16,
-    color: '#0C2055',
-    marginBottom: 4,
-  },
-  testimonialLocation: {
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 14,
-    color: '#6B7280',
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -208,9 +237,9 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   navButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
