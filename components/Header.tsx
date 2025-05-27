@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Platform } from 'react-native';
-import { Phone, TextSize, Sun, Moon } from 'lucide-react-native';
+import { Phone, Text as TextSize, Sun, Moon } from 'lucide-react-native';
 import { Link } from 'expo-router';
 
 export default function Header() {
