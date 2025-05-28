@@ -49,6 +49,8 @@ export default function Header() {
             <TouchableOpacity 
               style={[styles.accessibilityButton, isDarkMode && styles.darkAccessibilityButton]} 
               onPress={toggleTextSize}
+              accessibilityLabel="Змінити розмір тексту"
+              accessibilityHint="Натисніть, щоб збільшити або зменшити розмір тексту"
             >
               <TextSize size={20} color={isDarkMode ? '#FFFFFF' : '#0C2055'} />
             </TouchableOpacity>
@@ -56,6 +58,8 @@ export default function Header() {
             <TouchableOpacity 
               style={[styles.accessibilityButton, isDarkMode && styles.darkAccessibilityButton]} 
               onPress={toggleDarkMode}
+              accessibilityLabel="Змінити контраст"
+              accessibilityHint="Натисніть, щоб переключити між світлою та темною темою"
             >
               {isDarkMode ? (
                 <Sun size={20} color="#FFFFFF" />
@@ -65,7 +69,11 @@ export default function Header() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.phoneButton}>
+          <TouchableOpacity 
+            style={styles.phoneButton}
+            accessibilityLabel="Зателефонувати"
+            accessibilityHint="Натисніть, щоб зателефонувати до служби підтримки"
+          >
             <Phone size={20} color="#FFFFFF" />
             <Text style={[
               styles.phoneText,
@@ -76,6 +84,8 @@ export default function Header() {
           <TouchableOpacity 
             style={styles.menuButton} 
             onPress={() => setIsMenuOpen(!isMenuOpen)}
+            accessibilityLabel="Відкрити меню"
+            accessibilityHint="Натисніть, щоб відкрити або закрити головне меню"
           >
             <View style={[styles.menuLine, isMenuOpen && styles.menuLineRotateDown]}></View>
             <View style={[styles.menuLine, isMenuOpen && styles.menuLineHidden]}></View>
@@ -87,7 +97,10 @@ export default function Header() {
       {isMenuOpen && (
         <View style={[styles.mobileMenu, isDarkMode && styles.darkMobileMenu]}>
           <Link href="/" asChild>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              accessibilityLabel="Перейти на головну сторінку"
+            >
               <Text style={[
                 styles.menuItemText,
                 isDarkMode && styles.darkText,
@@ -96,7 +109,10 @@ export default function Header() {
             </TouchableOpacity>
           </Link>
           <Link href="/about" asChild>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              accessibilityLabel="Перейти на сторінку про нас"
+            >
               <Text style={[
                 styles.menuItemText,
                 isDarkMode && styles.darkText,
@@ -105,7 +121,10 @@ export default function Header() {
             </TouchableOpacity>
           </Link>
           <Link href="/conditions" asChild>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              accessibilityLabel="Перейти на сторінку умов"
+            >
               <Text style={[
                 styles.menuItemText,
                 isDarkMode && styles.darkText,
@@ -114,7 +133,10 @@ export default function Header() {
             </TouchableOpacity>
           </Link>
           <Link href="/contact" asChild>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity 
+              style={styles.menuItem}
+              accessibilityLabel="Перейти на сторінку контактів"
+            >
               <Text style={[
                 styles.menuItemText,
                 isDarkMode && styles.darkText,
@@ -184,6 +206,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 16,
+    padding: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
   },
   phoneText: {
     fontFamily: 'Montserrat-Medium',
@@ -195,6 +220,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 18,
     justifyContent: 'space-between',
+    padding: 8,
   },
   menuLine: {
     width: '100%',
@@ -221,7 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(26, 26, 26, 0.98)',
   },
   menuItem: {
-    paddingVertical: 12,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.1)',
   },

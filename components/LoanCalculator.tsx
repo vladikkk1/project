@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import Slider from '@/components/ui/Slider';
-import { ArrowRight, Calculator } from 'lucide-react-native';
+import { ArrowRight, Calculator, HelpCircle } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -11,11 +11,10 @@ export default function LoanCalculator() {
   const [monthlyPayment, setMonthlyPayment] = useState(0);
   const [totalPayment, setTotalPayment] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(0));
+  const [showHelp, setShowHelp] = useState(false);
 
-  // Calculate monthly payment based on amount and term
   useEffect(() => {
-    // Simplified loan calculation (in real app, would need more accurate formula)
-    const interestRate = 0.029; // 2.9% monthly interest
+    const interestRate = 0.029;
     const monthlyInterest = interestRate;
     const payments = loanTerm;
     
@@ -25,7 +24,6 @@ export default function LoanCalculator() {
     setMonthlyPayment(Math.round(monthly));
     setTotalPayment(Math.round(monthly * payments));
 
-    // Animate the change
     Animated.sequence([
       Animated.timing(fadeAnim, {
         toValue: 0.3,
@@ -45,7 +43,29 @@ export default function LoanCalculator() {
       <View style={styles.header}>
         <Calculator size={24} color="#0C2055" />
         <Text style={styles.title}>Розрахуйте свій кредит</Text>
+        <TouchableOpacity 
+          onPress={() => setShowHelp(!showHelp)}
+          style={styles.helpButton}
+          accessibilityLabel="Довідка про калькулятор"
+          accessibilityHint="Натисніть, щоб отримати додаткову інформацію про розрахунок кредиту"
+        >
+          <HelpCircle size={20} color="#0C2055" />
+        </TouchableOpacity>
       </View>
+
+      {showHelp && (
+        <View style={styles.helpBox}>
+          <Text style={styles.helpText}>
+            Цей калькулятор допоможе вам розрахувати суму щомісячного платежу та загальну суму до сплати.
+            {'\n\n'}
+            1. Виберіть суму кредиту
+            {'\n'}
+            2. Виберіть термін кредиту
+            {'\n'}
+            3. Перегляньте розрахунок платежів
+          </Text>
+        </View>
+      )}
 
       <View style={styles.calculatorContainer}>
         <View style={styles.sliderContainer}>
@@ -59,10 +79,12 @@ export default function LoanCalculator() {
             maximumValue={500000}
             step={1000}
             onValueChange={setLoanAmount}
+            accessibilityLabel={`Сума кредиту: ${loanAmount.toLocaleString()} гривень`}
+            accessibilityHint="Проведіть пальцем вліво або вправо, щоб змінити суму кредиту"
           />
           <View style={styles.sliderRange}>
-            <Text style={styles.rangeText}>50 000</Text>
-            <Text style={styles.rangeText}>500 000</Text>
+            <Text style={styles.rangeText}>50 000 грн</Text>
+            <Text style={styles.rangeText}>500 000 грн</Text>
           </View>
         </View>
 
@@ -77,6 +99,8 @@ export default function LoanCalculator() {
             maximumValue={18}
             step={1}
             onValueChange={setLoanTerm}
+            accessibilityLabel={`Термін кредиту: ${loanTerm} місяців`}
+            accessibilityHint="Проведіть пальцем вліво або вправо, щоб змінити термін кредиту"
           />
           <View style={styles.sliderRange}>
             <Text style={styles.rangeText}>6 міс</Text>
@@ -87,6 +111,7 @@ export default function LoanCalculator() {
         <View style={styles.resultContainer}>
           <Animated.View 
             style={[styles.resultItem, { opacity: fadeAnim }]}
+            accessibilityLabel={`Щомісячний платіж: ${monthlyPayment.toLocaleString()} гривень`}
           >
             <Text style={styles.resultLabel}>Щомісячний платіж</Text>
             <Text style={styles.resultValue}>{monthlyPayment.toLocaleString()} грн</Text>
@@ -94,13 +119,18 @@ export default function LoanCalculator() {
           
           <Animated.View 
             style={[styles.resultItem, { opacity: fadeAnim }]}
+            accessibilityLabel={`Загальна сума: ${totalPayment.toLocaleString()} гривень`}
           >
             <Text style={styles.resultLabel}>Загальна сума</Text>
             <Text style={styles.resultValue}>{totalPayment.toLocaleString()} грн</Text>
           </Animated.View>
         </View>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity 
+          style={styles.button}
+          accessibilityLabel="Оформити кредит"
+          accessibilityHint="Натисніть, щоб перейти до оформлення кредиту"
+        >
           <Text style={styles.buttonText}>Оформити кредит</Text>
           <ArrowRight size={18} color="#FFFFFF" style={styles.buttonIcon} />
         </TouchableOpacity>
@@ -125,6 +155,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#0C2055',
     marginLeft: 12,
+    flex: 1,
+  },
+  helpButton: {
+    padding: 8,
+  },
+  helpBox: {
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  helpText: {
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 16,
+    color: '#374151',
+    lineHeight: 24,
   },
   calculatorContainer: {
     backgroundColor: '#FFFFFF',
@@ -147,12 +195,12 @@ const styles = StyleSheet.create({
   },
   sliderLabel: {
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 16,
+    fontSize: 18,
     color: '#0C2055',
   },
   sliderValue: {
     fontFamily: 'Montserrat-Bold',
-    fontSize: 16,
+    fontSize: 18,
     color: '#D4AF37',
   },
   sliderRange: {
@@ -162,7 +210,7 @@ const styles = StyleSheet.create({
   },
   rangeText: {
     fontFamily: 'Montserrat-Regular',
-    fontSize: 12,
+    fontSize: 14,
     color: '#6B7280',
   },
   resultContainer: {
@@ -180,13 +228,13 @@ const styles = StyleSheet.create({
   },
   resultLabel: {
     fontFamily: 'Montserrat-Medium',
-    fontSize: 14,
+    fontSize: 16,
     color: '#6B7280',
     marginBottom: 8,
   },
   resultValue: {
     fontFamily: 'Montserrat-Bold',
-    fontSize: 22,
+    fontSize: 24,
     color: '#0C2055',
   },
   button: {
@@ -205,7 +253,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Montserrat-SemiBold',
-    fontSize: 16,
+    fontSize: 18,
     color: '#FFFFFF',
   },
   buttonIcon: {
