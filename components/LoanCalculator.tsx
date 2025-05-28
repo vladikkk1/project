@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import Slider from '@/components/ui/Slider';
-import { ArrowRight, Calculator, HelpCircle } from 'lucide-react-native';
+import { ArrowRight, Calculator, CircleHelp as HelpCircle } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
